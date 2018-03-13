@@ -59,13 +59,13 @@ export FINAL_ZIP="${ZIP_DIR}/${ZIPNAME}"
 cd "${SRCDIR}";
 rm -fv ${IMAGE};
 
-if [[ "$@" =~ "mrproper" ]]; then
+# if [[ "$@" =~ "mrproper" ]]; then
     ${MAKE} mrproper
-fi
+# fi
 
-if [[ "$@" =~ "clean" ]]; then
+# if [[ "$@" =~ "clean" ]]; then
     ${MAKE} clean
-fi
+# fi
 
 ${MAKE} $DEFCONFIG;
 START=$(date +"%s");
