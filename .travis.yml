@@ -22,7 +22,7 @@ before_script:
   - git clone https://github.com/nathanchance/gcc-prebuilts -b aarch64-gnu-7.x $HOME/GNU/GCC7
 
 # Download the Kernel Sources
-  - git clone --depth=50 --branch=HB-At.R1-3.18-DevStream https://github.com/revanthstrakz/StRaKz_KeRnEl_Mido  $HOME/SK
+  - git clone --depth=50 --branch=Strakz-Oreo https://github.com/revanthstrakz/StRaKz_KeRnEl_Mido  $HOME/SK
 
 # Download AnyKernel2
 script:
