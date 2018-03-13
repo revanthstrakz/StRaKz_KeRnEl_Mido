@@ -97,4 +97,4 @@ echo -e "Uploading ${ZIPNAME} to https://transfer.sh/";
 transfer "${FINAL_ZIP}";
 else
 echo -e "Zip Creation Failed =(";
-fi # FINAL_ZIP check
+fi # FINAL_ZIP check 
