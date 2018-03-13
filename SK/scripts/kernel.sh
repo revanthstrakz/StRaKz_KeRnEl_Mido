@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source "heisenberg/scripts/env.sh";
+source "SK/scripts/env.sh";
 setperf
 
 # Kernel compiling script
@@ -31,16 +31,16 @@ fi
 
 export SRCDIR="${KERNELDIR}/${DEVICE}";
 export OUTDIR="${KERNELDIR}/out";
-export ANYKERNEL="${KERNELDIR}/heisenberg/anykernel/";
+export ANYKERNEL="${KERNELDIR}/SK/anykernel/";
 export ARCH="arm64";
 export SUBARCH="arm64";
 export TOOLCHAIN="${HOME}/GNU/GCC7/";
-export DEFCONFIG="heisenberg_defconfig";
-export ZIP_DIR="${KERNELDIR}/heisenberg/files/";
+export DEFCONFIG="mido_defconfig";
+export ZIP_DIR="${KERNELDIR}/SK/files/";
 export IMAGE="${OUTDIR}/arch/${ARCH}/boot/Image.gz-dtb";
 
 if [[ -z "${JOBS}" ]]; then
-    export JOBS="$(grep -c '^processor' /proc/cpuinfo)";
+    export JOBS="98";
 fi
 
 export MAKE="make O=${OUTDIR}";
