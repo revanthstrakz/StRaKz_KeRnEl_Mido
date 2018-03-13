@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source "heisenberg/scripts/env.sh";
+source "SK/scripts/env.sh";
 setperf
 
 # Kernel compiling script
@@ -31,16 +31,16 @@ fi
 
 export SRCDIR="${KERNELDIR}/${DEVICE}";
 export OUTDIR="${KERNELDIR}/out";
-export ANYKERNEL="${KERNELDIR}/heisenberg/anykernel/";
+export ANYKERNEL="${KERNELDIR}/SK/anykernel/";
 export ARCH="arm64";
 export SUBARCH="arm64";
 export TOOLCHAIN="${HOME}/GNU/GCC7/";
-export DEFCONFIG="heisenberg_defconfig";
-export ZIP_DIR="${KERNELDIR}/heisenberg/files/";
+export DEFCONFIG="mido_defconfig";
+export ZIP_DIR="${KERNELDIR}/SK/files/";
 export IMAGE="${OUTDIR}/arch/${ARCH}/boot/Image.gz-dtb";
 
 if [[ -z "${JOBS}" ]]; then
-    export JOBS="$(grep -c '^processor' /proc/cpuinfo)";
+    export JOBS="68";
 fi
 
 export MAKE="make O=${OUTDIR}";
@@ -50,7 +50,7 @@ export TCVERSION1="$(${CROSS_COMPILE}gcc --version | head -1 |\
 awk -F '(' '{print $2}' | awk '{print tolower($1)}')"
 export TCVERSION2="$(${CROSS_COMPILE}gcc --version | head -1 |\
 awk -F ')' '{print $2}' | awk '{print tolower($1)}')"
-export ZIPNAME="heisenberg-${TCVERSION1}.${TCVERSION2}-${DEVICE}-$(date +%Y%m%d-%H%M).zip"
+export ZIPNAME="StRaKz_KeRnEl_Mido-${TCVERSION1}.${TCVERSION2}-${DEVICE}-$(date +%Y%m%d-%H%M).zip"
 export FINAL_ZIP="${ZIP_DIR}/${ZIPNAME}"
 
 [ ! -d "${ZIP_DIR}" ] && mkdir -pv ${ZIP_DIR}
