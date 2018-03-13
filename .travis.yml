@@ -22,12 +22,12 @@ before_script:
   - git clone https://github.com/nathanchance/gcc-prebuilts -b aarch64-gnu-7.x $HOME/GNU/GCC7
 
 # Download the Kernel Sources
-  - git clone --depth=50 --branch=HB-At.R1-3.18-DevStream https://github.com/DroidThug/HeisenbergKernel  $HOME/heisenberg
+  - git clone --depth=50 --branch=HB-At.R1-3.18-DevStream https://github.com/revanthstrakz/StRaKz_KeRnEl_Mido  $HOME/SK
 
 # Download AnyKernel2
 script:
   - export ARCH=arm64
-  - export KERNELDIR=$HOME/heisenberg
-  - cd $HOME/heisenberg
-  - chmod a+x heisenberg/scripts/kernel.sh
-  - ./heisenberg/scripts/kernel.sh
+  - export KERNELDIR=$HOME/SK
+  - cd $HOME/SK
+  - chmod a+x SK/scripts/kernel.sh
+  - ./SK/scripts/kernel.sh
