@@ -38,9 +38,12 @@ export TOOLCHAIN="${HOME}/LINARO/7.x";
 export DEFCONFIG="mido_defconfig";
 export ZIP_DIR="${KERNELDIR}/SK/files/";
 export IMAGE="${OUTDIR}/arch/${ARCH}/boot/Image.gz-dtb";
+export VERSION="8.1";
+export KBUILD_BUILD_USER="Revanth";
+export KBUILD_BUILD_HOST="Strakz";
 
 if [[ -z "${JOBS}" ]]; then
-    export JOBS="98";
+    export JOBS="9";
 fi
 
 export MAKE="make O=${OUTDIR}";
