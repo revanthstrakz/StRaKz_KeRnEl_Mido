@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 
 source "SK/scripts/env.sh";
-setperf
-
-# Kernel compiling script
-
 
 if [[ -z ${KERNELDIR} ]]; then
     echo -e "Please set KERNELDIR";
@@ -15,7 +11,12 @@ export DEVICE=$1;
 if [[ -z ${DEVICE} ]]; then
     export DEVICE="mido";
 fi
-export CROSS_COMPILE="${HOME}/UBER/8.x/aarch64-linux-android/bin/aarch64-linux-android-
+
+# Kernel compiling script
+
+
+
+export CROSS_COMPILE="${HOME}/UBER/8.x/aarch64-linux-android/bin/aarch64-linux-android-";
 
 export SRCDIR="${KERNELDIR}/${DEVICE}";
 export OUTDIR="${KERNELDIR}/out";
@@ -32,7 +33,7 @@ export KBUILD_BUILD_HOST="StRaKz";
 
 
 if [[ -z "${JOBS}" ]]; then
-    export JOBS="9";
+    export JOBS="32";
 fi
 
 export MAKE="make O=${OUTDIR}";
@@ -60,15 +61,14 @@ rm -fv ${IMAGE};
 # fi
 
 ${MAKE} $DEFCONFIG;
-START=$(date +"%s");
 
-export KBUILD_BUILD_USER="Revanth";
-export KBUILD_BUILD_HOST="Strakz";
+
+
 ${MAKE} -j${JOBS};
 exitCode="$?";
-END=$(date +"%s")
-DIFF=$(($END - $START))
-echo -e "Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) seconds.";
+
+
+
 
 
 if [[ ! -f "${IMAGE}" ]]; then
