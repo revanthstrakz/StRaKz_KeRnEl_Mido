@@ -5,6 +5,8 @@ os:
 
 before_install:
   - sudo apt-get update -y
+  - sudo apt-get update -y
+  - sudo apt-get install openjdk-8-jdk
   - sudo apt-get install libncurses5-dev
   - sudo apt-get install git-core gnupg flex bison gperf
  
