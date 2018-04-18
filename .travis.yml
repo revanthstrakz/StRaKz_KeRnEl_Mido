@@ -6,8 +6,8 @@ os:
 before_install:
   - sudo apt-get update -y
   - sudo add-apt-repository --yes ppa:webupd8team/java
-  - sudo apt-get install oracle-java8-installer
-  - sudo apt install oracle-java8-set-default
+  - sudo apt-get install oracle-java9-installer
+  - sudo apt install oracle-java9-set-default
   - sudo apt-get install libncurses5-dev
   - sudo apt-get install git-core gnupg flex bison gperf
  
