@@ -10,8 +10,8 @@ function check_toolchain() {
     export TC="$(find ${TOOLCHAIN}/bin -type f -name *-gcc)";
 
 	if [[ -f "${TC}" ]]; then
-		export CROSS_COMPILE="${TOOLCHAIN}/bin/$(echo ${TC} | awk -F '/' '{print $NF'} |\
-sed -e 's/gcc//')";
+		export CROSS_COMPILE="${HOME}/UBER/8.x/aarch64-linux-android/bin/aarch64-linux-android-
+
 		echo -e "Using toolchain: $(${CROSS_COMPILE}gcc --version | head -1)";
 	else
 		echo -e "No suitable toolchain found in ${TOOLCHAIN}";
@@ -34,13 +34,14 @@ export OUTDIR="${KERNELDIR}/out";
 export ANYKERNEL="${KERNELDIR}/SK/anykernel/";
 export ARCH="arm64";
 export SUBARCH="arm64";
-export TOOLCHAIN="${HOME}/LINARO/7.x";
+export TOOLCHAIN="${HOME}/UBER/8.x";
 export DEFCONFIG="mido_defconfig";
 export ZIP_DIR="${KERNELDIR}/SK/files/";
 export IMAGE="${OUTDIR}/arch/${ARCH}/boot/Image.gz-dtb";
-export VERSION="8.1";
+export VERSION="8.1-initial";
 export KBUILD_BUILD_USER="Revanth";
 export KBUILD_BUILD_HOST="Strakz";
+
 
 if [[ -z "${JOBS}" ]]; then
     export JOBS="9";
@@ -72,6 +73,9 @@ rm -fv ${IMAGE};
 
 ${MAKE} $DEFCONFIG;
 START=$(date +"%s");
+
+export KBUILD_BUILD_USER="Revanth";
+export KBUILD_BUILD_HOST="Strakz";
 ${MAKE} -j${JOBS};
 exitCode="$?";
 END=$(date +"%s")
