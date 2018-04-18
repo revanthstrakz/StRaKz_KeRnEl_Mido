@@ -35,15 +35,15 @@ export ANYKERNEL="${KERNELDIR}/SK/anykernel/";
 export ARCH="arm64";
 export SUBARCH="arm64";
 export TOOLCHAIN="${HOME}/LINARO/7.x";
-export DEFCONFIG="mido_defconfig";
+export DEFCONFIG="strakz_defconfig";
 export ZIP_DIR="${KERNELDIR}/SK/files/";
 export IMAGE="${OUTDIR}/arch/${ARCH}/boot/Image.gz-dtb";
 export VERSION="8.1";
-export KBUILD_BUILD_USER="Revanth";
-export KBUILD_BUILD_HOST="Strakz";
+export KBUILD_BUILD_USER="ReVaNtH";
+export KBUILD_BUILD_HOST="StRaKz";
 
 if [[ -z "${JOBS}" ]]; then
-    export JOBS="9";
+    export JOBS="32";
 fi
 
 export MAKE="make O=${OUTDIR}";
