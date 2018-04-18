@@ -16,7 +16,7 @@ fi
 
 
 
-export CROSS_COMPILE="${HOME}/UBER/8.x/aarch64-linux-android/bin/aarch64-linux-android-";
+export CROSS_COMPILE="${HOME}/UBER/8.x/bin/aarch64-linux-android-";
 
 export SRCDIR="${KERNELDIR}/${DEVICE}";
 export OUTDIR="${KERNELDIR}/out";
