@@ -31,9 +31,9 @@ echo -e "***********************************************$nocol"
 LC_ALL=C date +%Y-%m-%d
 kernel_dir=$PWD
 build=$kernel_dir/out
-export CROSS_COMPILE="/home/vipul/kernels/toolchains/aarch64-linaro-linux-android/bin/aarch64-linaro-linux-android-"
+export CROSS_COMPILE="/home/vipul/kernels/toolchains/aarch64-linux-android/bin/aarch64-opt-linux-android-"
 kernel="ElectraBlue"
-version="10.0"
+version="11.0"
 vendor="xiaomi"
 android="OREO"
 device="mido"
