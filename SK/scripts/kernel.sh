@@ -5,19 +5,6 @@ setperf
 
 # Kernel compiling script
 
-function check_toolchain() {
-
-    export TC="$(find ${TOOLCHAIN}/bin -type f -name *-gcc)";
-
-	if [[ -f "${TC}" ]]; then
-		export CROSS_COMPILE="${HOME}/UBER/8.x/aarch64-linux-android/bin/aarch64-linux-android-
-
-		echo -e "Using toolchain: $(${CROSS_COMPILE}gcc --version | head -1)";
-	else
-		echo -e "No suitable toolchain found in ${TOOLCHAIN}";
-		exit 1;
-	fi
-}
 
 if [[ -z ${KERNELDIR} ]]; then
     echo -e "Please set KERNELDIR";
@@ -28,6 +15,7 @@ export DEVICE=$1;
 if [[ -z ${DEVICE} ]]; then
     export DEVICE="mido";
 fi
+export CROSS_COMPILE="${HOME}/UBER/8.x/aarch64-linux-android/bin/aarch64-linux-android-
 
 export SRCDIR="${KERNELDIR}/${DEVICE}";
 export OUTDIR="${KERNELDIR}/out";
