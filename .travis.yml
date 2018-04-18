@@ -25,7 +25,7 @@ before_install:
   - export USE_CCACHE=1
 
 before_script:
-# Download the toolchain
+# Download te toolchain
   -git clone https://github.com/nathanchance/gcc-prebuilts -b aarch64-gnu-7.x $HOME/LINARO/7.x
 
 # Download the Kernel Sources
