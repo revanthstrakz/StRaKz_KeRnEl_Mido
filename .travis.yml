@@ -19,7 +19,7 @@ before_install:
 
 before_script:
 # Download the toolchain
-  - git clone https://github.com/nathanchance/gcc-prebuilts -b aarch64-linaro-7.x $HOME/LINARO/7.x
+  - git clone --depth=50 --branch=uber-8.x https://github.com/kondors1995/aarch64-linux-android $HOME/UBER/8.x
 
 # Download the Kernel Sources
   - git clone --depth=50 --branch=Strakz-Oreo https://github.com/revanthstrakz/StRaKz_KeRnEl_Mido  $HOME/SK
