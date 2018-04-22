@@ -56,6 +56,8 @@ awk -F ')' '{print $2}' | awk '{print tolower($1)}')"
 export ZIPNAME="StRaKz_KeRnEl-${TCVERSION1}.${TCVERSION2}-${DEVICE}-$(date +%Y%m%d-%H%M).zip"
 export FINAL_ZIP="${ZIP_DIR}/${ZIPNAME}"
 
+export CROSS_COMPILE="${TOOLCHAIN}/bin/aarch64-opt-linux-android-"
+
 [ ! -d "${ZIP_DIR}" ] && mkdir -pv ${ZIP_DIR}
 [ ! -d "${OUTDIR}" ] && mkdir -pv ${OUTDIR}
 
