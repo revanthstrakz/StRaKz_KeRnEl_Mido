@@ -26,7 +26,7 @@ before_install:
 
 before_script:
 # Download te toolchain
-  - git clone --depth=50 --branch=opt-linaro-7.x https://github.com/krasCGQ/aarch64-linux-android -b $HOME/LINARO/7.x
+  - git clone --depth=50 --branch=opt-linaro-7.x https://github.com/krasCGQ/aarch64-linux-android $HOME/LINARO/7.x
 
 # Download the Kernel Sources
   - git clone --depth=50 --branch=Strakz-Oreo https://github.com/revanthstrakz/StRaKz_KeRnEl_Mido  $HOME/SK
