@@ -38,7 +38,7 @@ export TOOLCHAIN="${HOME}/LINARO/7.x";
 export DEFCONFIG="strakz_defconfig";
 export ZIP_DIR="${KERNELDIR}/SK/files/";
 export IMAGE="${OUTDIR}/arch/${ARCH}/boot/Image.gz-dtb";
-export VERSION="8.1";
+export VERSION="🐼😂";
 export KBUILD_BUILD_USER="ReVaNtH";
 export KBUILD_BUILD_HOST="StRaKz";
 
