@@ -1,5 +1,4 @@
 
-
 #ifdef CONFIG_SCHED_TUNE
 
 #include <linux/reciprocal_div.h>
