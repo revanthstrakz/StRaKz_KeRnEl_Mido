@@ -29,7 +29,7 @@ before_script:
   - git clone --depth=50 --branch=opt-linaro-7.x https://github.com/krasCGQ/aarch64-linux-android $HOME/LINARO/7.x
 
 # Download the Kernel Sources
-  - git clone --depth=50 --branch=Strakz-Oreo https://github.com/revanthstrakz/StRaKz_KeRnEl_Mido  $HOME/SK
+  - git clone --depth=50 --branch=EAS-port https://github.com/revanthstrakz/StRaKz_KeRnEl_Mido  $HOME/SK
 
 # Download AnyKernel2
 script:
