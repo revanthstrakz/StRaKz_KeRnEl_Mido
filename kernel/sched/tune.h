@@ -1,4 +1,5 @@
 
+
 #ifdef CONFIG_SCHED_TUNE
 
 #include <linux/reciprocal_div.h>
@@ -23,6 +24,9 @@ void schedtune_exit_task(struct task_struct *tsk);
 
 void schedtune_enqueue_task(struct task_struct *p, int cpu);
 void schedtune_dequeue_task(struct task_struct *p, int cpu);
+
+int schedtune_accept_deltas(int nrg_delta, int cap_delta,
+			    struct task_struct *task);
 
 #else /* CONFIG_CGROUP_SCHEDTUNE */
 
