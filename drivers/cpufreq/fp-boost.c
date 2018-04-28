@@ -28,14 +28,14 @@
 
 #include <linux/cpu.h>
 #include <linux/cpufreq.h>
-#include <linux/display_state.h>
 #include <linux/input.h>
+#include <linux/fb.h>
 #include <linux/slab.h>
-#include <linux/time.h>
 
 /* Available bits for boost_policy state */
 #define DRIVER_ENABLED        (1U << 0)
-#define FINGERPRINT_BOOST           (1U << 1)
+#define SCREEN_AWAKE          (1U << 1)
+#define FINGERPRINT_BOOST     (1U << 2)
 
 /* Fingerprint sensor input key */
 #define FINGERPRINT_KEY 0x2ee
@@ -48,7 +48,7 @@
  * workers used for a single input-boost event.
  */
 struct fp_config {
-	struct delayed_work boost_work;
+	struct work_struct boost_work;
 	struct delayed_work unboost_work;
 	uint32_t adj_duration_ms;
 	uint32_t cpus_to_boost;
@@ -67,9 +67,6 @@ struct boost_policy {
 	struct workqueue_struct *wq;
 	uint32_t state;
 };
-
-/* Using time stamp to avoid unnecessory boost */
-struct timeval prev_timeval;
 
 /* Global pointer to all of the data for the driver */
 static struct boost_policy *boost_policy_g;
@@ -114,9 +111,6 @@ static int do_cpu_boost(struct notifier_block *nb,
 	struct cpufreq_policy *policy = data;
 	struct boost_policy *b = boost_policy_g;
 	uint32_t state;
-	struct timeval curr_timeval;
-
-	do_gettimeofday(&curr_timeval);
 
 	if (action != CPUFREQ_ADJUST)
 		return NOTIFY_OK;
@@ -133,23 +127,64 @@ static int do_cpu_boost(struct notifier_block *nb,
 
 	/* Boost CPU to max frequency for fingerprint boost */
 	if (state & FINGERPRINT_BOOST) {
-		if (curr_timeval.tv_sec>prev_timeval.tv_sec) {
-			prev_timeval.tv_sec = curr_timeval.tv_sec;
-			pr_info("Boosting\n");
-			policy->cur = policy->max;
-			policy->min = policy->max;
-			return NOTIFY_OK;
-
-		} else {
-			pr_info("Boost avoided!\n");
-		}
+		pr_info("Boosting\n");
+		policy->cur = policy->max;
+		policy->min = policy->max;
+		return NOTIFY_OK;
 	}
+
 	return NOTIFY_OK;
 }
 
 static struct notifier_block do_cpu_boost_nb = {
 	.notifier_call = do_cpu_boost,
-	.priority = INT_MAX,
+};
+
+static int fb_notifier_callback(struct notifier_block *nb,
+		unsigned long action, void *data)
+{
+	struct boost_policy *b = boost_policy_g;
+	struct fp_config *fp = &b->fp;
+	struct fb_event *evdata = data;
+	int *blank = evdata->data;
+	uint32_t state;
+
+	/* Parse framebuffer events as soon as they occur */
+	if (action != FB_EARLY_EVENT_BLANK)
+		return NOTIFY_OK;
+
+	state = get_boost_state(b);
+
+	/* Only boost for unblank (i.e. when the screen turns on) */
+	switch (*blank) {
+	case FB_BLANK_UNBLANK:
+		/* Keep track of screen state */
+		set_boost_bit(b, SCREEN_AWAKE);
+		break;
+	default:
+		/* Unboost CPUs when the screen turns off */
+		if (state & FINGERPRINT_BOOST)
+			unboost_all_cpus(b);
+		clear_boost_bit(b, SCREEN_AWAKE);
+		return NOTIFY_OK;
+	}
+
+	/* Driver is disabled, so don't boost */
+	if (!(state & DRIVER_ENABLED))
+		return NOTIFY_OK;
+
+	/* Framebuffer boost is already in progress */
+	if (state & FINGERPRINT_BOOST)
+		return NOTIFY_OK;
+
+	queue_work(b->wq, &fp->boost_work);
+
+	return NOTIFY_OK;
+}
+
+static struct notifier_block fb_notifier_callback_nb = {
+	.notifier_call = fb_notifier_callback,
+	.priority      = INT_MAX,
 };
 
 static void cpu_fp_input_event(struct input_handle *handle, unsigned int type,
@@ -159,21 +194,18 @@ static void cpu_fp_input_event(struct input_handle *handle, unsigned int type,
 	struct fp_config *fp = &b->fp;
 	uint32_t state;
 
-	if (is_display_on())
-		return;
-
 	state = get_boost_state(b);
 
-	if (!(state & DRIVER_ENABLED) || touched)
+	if (!(state & DRIVER_ENABLED) || !(state & SCREEN_AWAKE) || touched)
 		return;
 
 	pr_info("Recieved input event\n");
 	touched = true;
 	set_boost_bit(b, FINGERPRINT_BOOST);
 
-	/* Delaying work to ensure all CPUs are online */
-	queue_delayed_work(b->wq, &fp->boost_work,
-				msecs_to_jiffies(20));
+        /* Do not delay boost WQ */
+	queue_work(b->wq, &fp->boost_work);
+				
 }
 
 static int cpu_fp_input_connect(struct input_handler *handler,
@@ -352,7 +384,7 @@ static struct boost_policy *alloc_boost_policy(void)
 	if (!b)
 		return NULL;
 
-	b->wq = alloc_workqueue("cpu_fp_wq", WQ_HIGHPRI | WQ_UNBOUND, 0);
+	b->wq = alloc_workqueue("cpu_fp_wq", WQ_HIGHPRI, 0);
 	if (!b->wq) {
 		pr_err("Failed to allocate workqueue\n");
 		goto free_b;
@@ -371,11 +403,6 @@ static int __init cpu_fp_init(void)
 	int ret;
 	touched = false;
 
-	do_gettimeofday(&prev_timeval);
-
-	/* To allow first boost */
-	prev_timeval.tv_sec -= 2;
-
 	b = alloc_boost_policy();
 	if (!b) {
 		pr_err("Failed to allocate boost policy\n");
@@ -384,7 +411,7 @@ static int __init cpu_fp_init(void)
 
 	spin_lock_init(&b->lock);
 
-	INIT_DELAYED_WORK(&b->fp.boost_work, fp_boost_main);
+	INIT_WORK(&b->fp.boost_work, fp_boost_main);
 	INIT_DELAYED_WORK(&b->fp.unboost_work, fp_unboost_main);
 
 	/* Allow global boost config access */
@@ -401,7 +428,9 @@ static int __init cpu_fp_init(void)
 		goto input_unregister;
 
 	cpufreq_register_notifier(&do_cpu_boost_nb, CPUFREQ_POLICY_NOTIFIER);
-	set_boost_bit(b, DRIVER_ENABLED);
+
+        fb_register_client(&fb_notifier_callback_nb);
+
 	return 0;
 
 input_unregister:
