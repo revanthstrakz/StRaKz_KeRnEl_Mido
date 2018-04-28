@@ -472,7 +472,7 @@ static struct cpu_clk_8953 *cpuclk[] = { &a53_pwr_clk, &a53_perf_clk,
 			
                  
                      
-jj
+
 
 
 	
